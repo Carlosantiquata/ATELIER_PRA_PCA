@@ -1,0 +1,62 @@
+- name: PRA workshop - deploy + restore (k3d)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    cluster_name: pra
+    namespace: pra
+    image: "pra/flask-sqlite:1.0"
+    do_restore: false   # mets true pour faire un restore automatiquement
+
+  tasks:
+    - name: Check k3d is installed
+      ansible.builtin.command: k3d version
+      register: k3d_ver
+      changed_when: false
+
+    - name: Ensure k3d cluster exists
+      ansible.builtin.shell: |
+        set -e
+        if k3d cluster list | awk '{print $1}' | grep -qx "{{ cluster_name }}"; then
+          echo "Cluster {{ cluster_name }} already exists"
+        else
+          k3d cluster create {{ cluster_name }} --servers 1 --agents 2
+        fi
+      changed_when: false
+
+    - name: Ensure kubectl can reach the cluster
+      ansible.builtin.command: kubectl get nodes
+      register: nodes
+      changed_when: false
+
+    - name: Import local Docker image into k3d cluster
+      ansible.builtin.shell: |
+        set -e
+        k3d image import {{ image }} -c {{ cluster_name }}
+      changed_when: true
+
+    - name: Apply K8s manifests
+      ansible.builtin.command: kubectl apply -f k8s/
+      args:
+        chdir: ".."
+
+    - name: Wait for deployment rollout
+      ansible.builtin.command: kubectl -n {{ namespace }} rollout status deployment/flask --timeout=180s
+      changed_when: false
+
+    - name: Optional restore (delete + apply job + wait)
+      when: do_restore | bool
+      block:
+        - name: Delete restore job if exists
+          ansible.builtin.command: kubectl -n {{ namespace }} delete job/sqlite-restore --ignore-not-found=true
+          changed_when: false
+
+        - name: Apply restore job
+          ansible.builtin.command: kubectl apply -f k8s/50-job-restore.yaml
+          args:
+            chdir: ".."
+
+        - name: Wait restore job completion
+          ansible.builtin.command: kubectl -n {{ namespace }} wait --for=condition=complete job/sqlite-restore --timeout=180s
+          changed_when: false

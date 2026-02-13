@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sqlite-backup
+  namespace: pra
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: alpine
+              command: ["/bin/sh","-c"]
+              args:
+                - |
+                  TS=$(date +%s)
+                  cp /data/app.db /backup/app-$TS.db || true
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: pra-data
+            - name: backup
+              persistentVolumeClaim:
+                claimName: pra-backup
