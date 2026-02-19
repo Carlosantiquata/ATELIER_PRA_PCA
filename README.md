@@ -276,7 +276,18 @@ Difficulté : Moyenne (~2 heures)
 ### **Atelier 2 : Choisir notre point de restauration**  
 Aujourd’hui nous restaurobs “le dernier backup”. Nous souhaitons **ajouter la capacité de choisir un point de restauration**.
 
-*..Décrir ici votre procédure de restauration (votre runbook)..*  
+*Procédure de restauration manuelle (Runbook) :
+
+Lister les sauvegardes : Utiliser la commande ls -lh /backup dans un pod de debug pour voir tous les fichiers disponibles (ils sont nommés avec la date et l'heure).
+
+Modifier le fichier de restauration : Ouvrir le fichier pra/50-job-restore.yaml dans l'éditeur.
+
+Cibler le bon fichier : Dans la partie command, remplacer le nom générique du fichier par le nom exact du backup choisi
+ (ex: cp /backup/sqlite-backup-2026-02-19.db /data/app.db).
+
+Lancer la restauration : Exécuter la commande kubectl apply -f pra/50-job-restore.yaml.
+
+Validation : Vérifier sur la route /status que le nombre de messages (count) correspond bien à ce qui était attendu à cette date.*  
   
 ---------------------------------------------------
 Evaluation
