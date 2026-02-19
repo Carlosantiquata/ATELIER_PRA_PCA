@@ -231,12 +231,14 @@ Faites preuve de pédagogie et soyez clair dans vos explications et procedures d
 **Exercice 1 :**  
 Quels sont les composants dont la perte entraîne une perte de données ?  
   
-*..Répondez à cet exercice ici..*
+*La perte du pod applicatif ne cause aucune perte de données, car les données sont stockées à l'extérieur du pod.
+par contre la perte du Persistent Volume Claim (PVC) principal nommé pra-data entraîne la perte de la base de données en production, mais on peut toujours la reconstruire avec le pra_backup 
+mais si on perd également le volume de sauvegarde (PVC pra-backup), alors la perte de données est totale et irréversible.*
 
 **Exercice 2 :**  
 Expliquez nous pourquoi nous n'avons pas perdu les données lors de la supression du PVC pra-data  
   
-*..Répondez à cet exercice ici..*
+*je vais prendre en exemple le sceanario 2, on a supprimer *
 
 **Exercice 3 :**  
 Quels sont les RTO et RPO de cette solution ?  
