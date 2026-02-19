@@ -270,6 +270,7 @@ Difficulté : Moyenne (~2 heures)
 * backup_age_seconds : âge du dernier backup
 
 *..**<img width="897" height="244" alt="image" src="https://github.com/user-attachments/assets/7ad619a6-caba-4aa3-8325-cd84d96b029c" />
+<img width="932" height="296" alt="image" src="https://github.com/user-attachments/assets/7971a458-da37-4f02-87ef-88e96f808461" />
 *
 
 ---------------------------------------------------
