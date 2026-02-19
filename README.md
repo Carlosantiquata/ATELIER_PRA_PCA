@@ -238,22 +238,26 @@ mais si on perd également le volume de sauvegarde (PVC pra-backup), alors la pe
 **Exercice 2 :**  
 Expliquez nous pourquoi nous n'avons pas perdu les données lors de la supression du PVC pra-data  
   
-*je vais prendre en exemple le sceanario 2, on a supprimer *
+*je vais prendre en exemple le sceanario 2, on a supprimer le pvc, mais on a rien perdu car on a installé une solution de sauvegarde automatisé, pour restauré les données on avait simplement besoin de lancer un script utilisant le backup pour recréé le pvc tout neuf. *
 
 **Exercice 3 :**  
 Quels sont les RTO et RPO de cette solution ?  
   
-*..Répondez à cet exercice ici..*
+*alors les rto et rpo de cette solution sont : rto (Recovery Time Objective)=quelque minutes disont et pour le rpo(Recovery Point Objective)=une minute car chaque minute l'assitant sauvegarde les donnees*
 
 **Exercice 4 :**  
 Pourquoi cette solution (cet atelier) ne peux pas être utilisé dans un vrai environnement de production ? Que manque-t-il ?   
   
-*..Répondez à cet exercice ici..*
+*car notre environement de production et notre sauvegarde sont un peu dans le meme sac et ca comment solution à utiliser ce n'est pas pérrene, et aussi la sauvegarde n'est qu'un fichier il ne supportera pas si plusieur services ecrire en meme temps dessus, et aussi on doit tout restauré manuellement.
+ce qui manque c'est de scinder le volume de sauvegarde et le volume de production qu'il ne soit pas dans le meme "sac", mais aussi de rendre la sauvegarde auto plus robuste pour pouvoir accepter plusieur ecriture en meme temps sans se casser et de rendre la restauration automatique si destruction se passe.*
   
 **Exercice 5 :**  
 Proposez une archtecture plus robuste.   
   
-*..Répondez à cet exercice ici..*
+*ma proposition sera de : 
+-changer de bases de données idéalement l'hebergé dans un cloud managé
+-externalisé les backup 
+-déployer plusieur repliqua pour obtenir un haut taux de disponibilité *
 
 ---------------------------------------------------
 Séquence 6 : Ateliers  
